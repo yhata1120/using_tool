@@ -53,3 +53,24 @@ def get_conversion_matrix(interface, rotation_axis = np.array([0,0,0,])):
     conversion_matrix = np.array([[conversion_matrix[1,1,],conversion_matrix[1,2,]],
                                  [conversion_matrix[2,1,],conversion_matrix[2,2,],]])
     return conversion_matrix
+
+def extract_descriptor(df):
+    X_all = df[['misorientation','dy','dz','sigma','gbarea','1stnnmean','2ndnnmean','shorter_bonds_num','longer_bonds_num','shorter_bonds_mean','longer_bonds_mean','mininum_bond','num_dangling_bond','num_aroundgb']]
+    X_all.loc[:,'dangling_bond/gbarea'] = X_all.loc[:,'num_dangling_bond']/X_all.loc[:,'gbarea']
+    X_all.loc[:,'shorter_bonds/gbarea'] = X_all.loc[:,'shorter_bonds_num']/X_all.loc[:,'gbarea']
+    X_all.loc[:,'longer_bonds/gbarea'] = X_all.loc[:,'longer_bonds_num']/X_all.loc[:,'gbarea']
+    X_all.loc[:,'num_aroundgb/gbarea'] = X_all.loc[:,'num_aroundgb']/X_all.loc[:,'gbarea']
+    X_all.loc[:,'tan'] = np.tan(X_all.loc[:,'misorientation']/180*np.pi/2)
+    X_all.drop(['misorientation', 'shorter_bonds_num','longer_bonds_num','num_dangling_bond','gbarea','num_aroundgb'], axis=1,inplace = True)
+    X_nonzero = X_all.copy()
+    X_nonzero.drop(['dy','dz','shorter_bonds/gbarea','longer_bonds/gbarea','dangling_bond/gbarea','tan'], axis=1,inplace = True)
+    X_nonzero_array = X_nonzero.values
+    X_all_array = X_all.values
+    X_all_square = X_all_array**2
+    X_inv = 1/X_nonzero_array
+    X_all_sqinv = X_inv**2
+    X_all_exp = np.exp(X_all_array)
+    X_all_invexp = np.exp(X_inv)
+    X_all_tot = np.concatenate([X_all_array,X_all_square,X_inv,X_all_sqinv,X_all_exp,X_all_invexp,],1)
+    y_all = df[['energy','delta_x']].values
+    return X_all_tot, y_all
