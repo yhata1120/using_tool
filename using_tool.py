@@ -74,3 +74,15 @@ def extract_descriptor(df):
     X_all_tot = np.concatenate([X_all_array,X_all_square,X_inv,X_all_sqinv,X_all_exp,X_all_invexp,],1)
     y_all = df[['energy','delta_x']].values
     return X_all_tot, y_all
+
+
+def calc_frantional(cnids):
+    cnids.loc[:,"invcnidy1"] = cnids.loc[:,"cnidv2z"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
+    cnids.loc[:,"invcnidz1"] = -cnids.loc[:,"cnidv2y"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
+    cnids.loc[:,"invcnidy2"] = -cnids.loc[:,"cnidv1z"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
+    cnids.loc[:,"invcnidz2"] = cnids.loc[:,"cnidv1y"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
+    cnids.loc[:,"cnid1"] = cnids.loc[:,"invcnidy1"]*cnids.loc[:,"dy"] + cnids.loc[:,"invcnidz1"]*cnids.loc[:,"dz"]
+    cnids.loc[:,"cnid2"] = cnids.loc[:,"invcnidy2"]*cnids.loc[:,"dy"] + cnids.loc[:,"invcnidz2"]*cnids.loc[:,"dz"]
+    cnids.loc[:,"sincnid1"] = np.sin(np.pi*cnids.loc[:,"cnid1"])
+    cnids.loc[:,"sincnid2"] = np.sin(np.pi*cnids.loc[:,"cnid2"])
+
