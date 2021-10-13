@@ -76,13 +76,15 @@ def extract_descriptor(df):
     return X_all_tot, y_all
 
 
-def calc_frantional(cnids):
-    cnids.loc[:,"invcnidy1"] = cnids.loc[:,"cnidv2z"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
-    cnids.loc[:,"invcnidz1"] = -cnids.loc[:,"cnidv2y"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
-    cnids.loc[:,"invcnidy2"] = -cnids.loc[:,"cnidv1z"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
-    cnids.loc[:,"invcnidz2"] = cnids.loc[:,"cnidv1y"]/(cnids.loc[:,"cnidv1y"]*cnids.loc[:,"cnidv2z"]-cnids.loc[:,"cnidv1z"]*cnids.loc[:,"cnidv2y"])
-    cnids.loc[:,"cnid1"] = cnids.loc[:,"invcnidy1"]*cnids.loc[:,"dy"] + cnids.loc[:,"invcnidz1"]*cnids.loc[:,"dz"]
-    cnids.loc[:,"cnid2"] = cnids.loc[:,"invcnidy2"]*cnids.loc[:,"dy"] + cnids.loc[:,"invcnidz2"]*cnids.loc[:,"dz"]
-    cnids.loc[:,"sincnid1"] = np.sin(np.pi*cnids.loc[:,"cnid1"])
-    cnids.loc[:,"sincnid2"] = np.sin(np.pi*cnids.loc[:,"cnid2"])
-
+first_loop = True
+for name_i, group_i in data_tot.groupby(by = ["100","10",]):
+    data_i = np.array(group_i.values, dtype = float)
+    train_i, test_i = train_test_split(data_i,test_size=0.2, random_state = 0)
+    if first_loop:
+        train = train_i
+        test = test_i
+        first_loop = False
+    else:
+        train = np.vstack((train,train_i))
+        test = np.vstack((test,test_i))
+        
