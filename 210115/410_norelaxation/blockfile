@@ -1,0 +1,10 @@
+region fixbulk1 block EDGE 74.4794964090087745 EDGE EDGE EDGE EDGE units box 
+region fixbulk2 block 134.4794964090087888 EDGE EDGE EDGE EDGE EDGE units box 
+region middle block 84.4794964090087745 134.4794964090087888 EDGE EDGE EDGE EDGE units box 
+region right block 104.4795064090087777 EDGE EDGE EDGE EDGE EDGE units box 
+region bulk block 160.0000000000000000 165.0000000000000000 EDGE EDGE EDGE EDGE units box 
+group fixbulk1 region fixbulk1 
+group fixbulk2 region fixbulk2 
+group middle region middle 
+group right region right 
+group bulk region bulk 
